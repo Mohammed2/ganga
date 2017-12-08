@@ -7,7 +7,9 @@ WORKDIR /root
 
 COPY . ganga
 
-RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/cvmfs/lhcb.cern.ch/lib/lcg/releases/LCG_88/Python/2.7.13/x86_64-slc6-gcc49-opt/lib &&\
+RUN . /etc/cvmfs/run-cvmfs.sh &&\
+    . ~/.bashrc &&\
+    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/cvmfs/lhcb.cern.ch/lib/lcg/releases/LCG_88/Python/2.7.13/x86_64-slc6-gcc49-opt/lib &&\
     virtualenv -p /cvmfs/lhcb.cern.ch/lib/lcg/releases/LCG_88/Python/2.7.13/x86_64-slc6-gcc49-opt/bin/python venv &&\
     . venv/bin/activate &&\
     pip install --upgrade pip setuptools &&\
