@@ -7,23 +7,22 @@ WORKDIR /root
 
 COPY . ganga
 
-RUN . /etc/cvmfs/run-cvmfs.sh && \
-    . ~/.bashrc && \
-    virtualenv venv && \
-    . venv/bin/activate && \
-    pip install --upgrade pip setuptools && \
-    pip install -e ganga && \
-    cd ganga && \
+RUN export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(dirname $(dirname `which python`))/lib &&\
+    virtualenv -p `which python` venv &&\
+    . venv/bin/activate &&\
+    pip install --upgrade pip setuptools &&\
+    pip install -e ganga &&\
+    cd ganga &&\
     pip install --upgrade -r requirements.txt
 
-ENTRYPOINT . /etc/cvmfs/run-cvmfs.sh && \
-           . ~/.bashrc && \
-           export X509_CERT_DIR=/cvmfs/lhcb.cern.ch/etc/grid-security/certificates && \
+#ENTRYPOINT . /etc/cvmfs/run-cvmfs.sh && \
+#           . ~/.bashrc && \
+ENTRYPOINT export X509_CERT_DIR=/cvmfs/lhcb.cern.ch/etc/grid-security/certificates && \
            export X509_VOMS_DIR=/cvmfs/lhcb.cern.ch/etc/grid-security/vomsdir && \
            export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$(dirname $(dirname `which python`))/lib && \
            export GANGA_CONFIG_PATH=GangaLHCb/LHCb.ini && \
            export GANGA_SITE_CONFIG_AREA=/cvmfs/lhcb.cern.ch/lib/GangaConfig/config && \
            lhcb-proxy-init && \
-           . /root/venv/bin/activate && \
+           . venv/bin/activate && \
            cd ganga && \
            pytest python/GangaLHCb/test/Unit --runexternals --cov-report xml --cov . --junitxml tests.xml
