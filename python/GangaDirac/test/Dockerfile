@@ -32,6 +32,7 @@ ENTRYPOINT (. /root/dirac_ui/bashrc &&\
 	   echo -e "[defaults_DiracProxy]\ngroup=${vo}_user" >> ~/.gangarc &&\
            . /root/venv/bin/activate &&\
 	   yes | ganga -g &&\
+	   cd ganga &&\
 	   pytest
 #	   yes | /root/venv/bin/ganga -g &&\
 #	   /root/venv/bin/pytest
