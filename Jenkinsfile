@@ -36,6 +36,19 @@ pipeline {
             }
           }
         }
+        stage('GangaLHCb') {
+          steps {
+            sh "docker build -t gangalhcbtest:${env.BRANCH_NAME} -f ${env.WORKSPACE}/python/GangaLHCb/test/Dockerfile ."
+            sh "docker run --name GangaLHCb${env.BRANCH_NAME} -v ~/.globus:/root/.globus -e vo=gridpp gangalhcbtest:${env.BRANCH_NAME} /root/ganga/python/GangaLHCb/test/Unit --runexternals --cov-report xml --cov . --junitxml tests-GangaLHCb.xml || true"
+            sh "docker cp GangaLHCb${env.BRANCH_NAME}:/root/tests-GangaLHCb.xml ${env.WORKSPACE}"
+          }
+          post {
+            always {
+              sh "docker rm GangaLHCb${env.BRANCH_NAME}"
+              sh "docker rmi gangalhcbtest:${env.BRANCH_NAME}"
+            }
+          }
+        }
       } // end parallel
     }
   }
