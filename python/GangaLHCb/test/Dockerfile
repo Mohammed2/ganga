@@ -7,12 +7,14 @@ WORKDIR /root
 
 COPY . ganga
 
-RUN virtualenv venv && \
+RUN . /etc/cvmfs/run-cvmfs.sh && \
+    . ~/.bashrc && \
+    virtualenv venv && \
     . venv/bin/activate && \
+    pip install --upgrade pip setuptools && \
     pip install -e ganga && \
     cd ganga && \
     pip install --upgrade -r requirements.txt
-#    pip install --upgrade pip setuptools && \
 
 ENTRYPOINT . /etc/cvmfs/run-cvmfs.sh && \
            . ~/.bashrc && \
